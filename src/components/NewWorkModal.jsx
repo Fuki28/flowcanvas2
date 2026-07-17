@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Modal } from './Modal.jsx'
 import { supabase } from '../lib/supabase'
 
@@ -12,6 +12,14 @@ export function NewWorkModal({ etapas, clientes, onClose, onCreated, defaultEtap
   })
   const [loading, setLoading] = useState(false)
   const [error,   setError]   = useState('')
+
+  useEffect(() => {
+    setForm(prev => ({
+      ...prev,
+      cliente_id: defaultClienteId || '',
+      etapa_id: defaultEtapaId || prev.etapa_id || etapas[0]?.id || '',
+    }))
+  }, [defaultClienteId, defaultEtapaId, etapas])
 
   const handleSubmit = async () => {
     if (!form.nombre.trim()) { setError('El nombre es obligatorio'); return }
