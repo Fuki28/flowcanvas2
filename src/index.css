@@ -163,15 +163,34 @@ input, textarea, select { font-family: inherit; }
 .search-box input::placeholder { color: var(--text-muted); }
 
 /* ── STAT CARDS ── */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
 .stat-card {
   background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--r-xl); padding: 20px;
-  box-shadow: var(--shadow-md);
-  display: flex; align-items: flex-start; gap: 14px;
+  border-radius: 16px; padding: 20px;
+  box-shadow: var(--shadow-sm);
+  display: flex; flex-direction: column; justify-content: space-between;
+  min-height: 140px;
 }
-.stat-icon { width: 44px; height: 44px; border-radius: var(--r-lg); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.stat-number { font-size: 28px; font-weight: 700; line-height: 1; margin: 6px 0 4px; }
-.stat-label  { font-size: 12px; color: var(--text-muted); }
+.stat-card-header {
+  display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 12px;
+}
+.stat-icon { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.stat-number { font-size: 28px; font-weight: 700; line-height: 1; margin: 0 0 6px 0; color: var(--dark); }
+.stat-label  { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+.stat-trend {
+  display: inline-flex; align-items: center;
+  padding: 3px 8px; border-radius: 100px;
+  font-size: 11px; font-weight: 600;
+}
+.stat-trend-up { background: #E8FBF2; color: #10B981; }
+.stat-trend-down { background: #FEF2F2; color: #EF4444; }
+.stat-trend-neutral { background: #F1F5F9; color: #64748B; }
+
 
 /* ── BADGES ── */
 .badge-etapa {
@@ -325,6 +344,7 @@ input, textarea, select { font-family: inherit; }
   .sidebar-nav-item { justify-content: center; padding: 9px; }
   .sidebar-user { justify-content: center; padding: 12px 8px; }
   .client-grid { grid-template-columns: repeat(2, 1fr); }
+  .stat-grid { grid-template-columns: repeat(3, 1fr); }
 }
 @media (max-width: 768px) {
   .sidebar { display: none; }
@@ -340,6 +360,7 @@ input, textarea, select { font-family: inherit; }
   .kanban-board { flex-direction: column; }
   .kanban-col { width: 100%; }
   .client-grid { grid-template-columns: 1fr 1fr; }
+  .stat-grid { grid-template-columns: repeat(2, 1fr); }
   .config-layout { grid-template-columns: 1fr; }
   .detail-layout { grid-template-columns: 1fr; }
   .login-right { display: none; }
@@ -348,4 +369,5 @@ input, textarea, select { font-family: inherit; }
 }
 @media (max-width: 480px) {
   .client-grid { grid-template-columns: 1fr; }
+  .stat-grid { grid-template-columns: 1fr; }
 }

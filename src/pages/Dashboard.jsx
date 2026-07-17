@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { Briefcase, Clock, Zap, CheckCircle } from 'lucide-react'
+import { Folder, Clock, Printer, Truck, CheckCircle } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { Sidebar } from '../components/Sidebar.jsx'
 import { Topbar } from '../components/Topbar.jsx'
@@ -65,6 +65,7 @@ export function Dashboard() {
   }).length
   const enDiseno     = trabajos.filter(t => etapas.find(e => e.id === t.etapa_id)?.orden === 1).length
   const enProduccion = trabajos.filter(t => etapas.find(e => e.id === t.etapa_id)?.orden === 2).length
+  const porEntregar  = trabajos.filter(t => etapas.find(e => e.id === t.etapa_id)?.orden === 3).length
   const entregados   = trabajos.filter(t => {
     const e = etapas.find(e => e.id === t.etapa_id)
     return e && e.orden === etapas.length - 1
@@ -85,10 +86,11 @@ export function Dashboard() {
         <div className="page-body">
           {/* Stat cards */}
           <div className="stat-grid">
-            <StatCard icon={<Briefcase size={20}/>}   label="Trabajos activos"  value={activos}   iconBg="#EEF0FD" iconColor="#6B5CE7" />
-            <StatCard icon={<Clock size={20}/>}        label="En diseño"         value={enDiseno}   iconBg="#FFFBEB" iconColor="#F5A623" />
-            <StatCard icon={<Zap size={20}/>}          label="En producción"     value={enProduccion} iconBg="#EFF6FF" iconColor="#3B82F6" />
-            <StatCard icon={<CheckCircle size={20}/>}  label="Entregados"        value={entregados} iconBg="#ECFDF5" iconColor="#22C55E" />
+            <StatCard icon={<Folder size={20}/>}      label="Trabajos activos" value={activos}      trend="+12%" trendType="up"      iconBg="#EEF0FD" iconColor="#6B5CE7" />
+            <StatCard icon={<Clock size={20}/>}       label="En diseño"        value={enDiseno}     trend="+8%"  trendType="up"      iconBg="#FFFBEB" iconColor="#F5A623" />
+            <StatCard icon={<Printer size={20}/>}     label="En producción"    value={enProduccion} trend="— ="  trendType="neutral" iconBg="#EFF6FF" iconColor="#3B82F6" />
+            <StatCard icon={<Truck size={20}/>}       label="Por entregar"     value={porEntregar}  trend="-25%" trendType="down"    iconBg="#EAFDF4" iconColor="#10B981" />
+            <StatCard icon={<CheckCircle size={20}/>} label="Completados hoy"  value={entregados}   trend="+40%" trendType="up"      iconBg="#E6F4EA" iconColor="#137333" />
           </div>
 
           {/* Kanban */}
