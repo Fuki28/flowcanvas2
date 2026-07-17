@@ -190,33 +190,44 @@ export function Clientes() {
   const handleSave = async () => {
     if (!nombre.trim()) return
     setLoading(true)
-    
-    let error;
+
+    const fullPayload = {
+      nombre:   nombre.trim(),
+      email:    email.trim()    || null,
+      telefono: telefono.trim() || null,
+    }
+    const basicPayload = { nombre: nombre.trim() }
+
+    let error
     if (editingCliente) {
-      // Intentar actualizar en Supabase (puede dar error si no se han creado las columnas email y telefono en la DB)
-      const { error: err } = await supabase.from('clientes').update({
-        nombre: nombre.trim(),
-        email: email.trim() || null,
-        telefono: telefono.trim() || null
-      }).eq('id', editingCliente.id)
-      error = err
+      // Intentar actualizar con todos los campos
+      const { error: err } = await supabase
+        .from('clientes').update(fullPayload).eq('id', editingCliente.id)
+      // Si falla por columnas inexistentes, reintentar solo con nombre
+      if (err && (err.code === 'PGRST204' || err.message?.toLowerCase().includes('column'))) {
+        const { error: err2 } = await supabase
+          .from('clientes').update(basicPayload).eq('id', editingCliente.id)
+        error = err2
+      } else {
+        error = err
+      }
     } else {
-      const { error: err } = await supabase.from('clientes').insert([{
-        nombre: nombre.trim(),
-        email: email.trim() || null,
-        telefono: telefono.trim() || null
-      }])
-      error = err
+      // Intentar insertar con todos los campos
+      const { error: err } = await supabase
+        .from('clientes').insert([fullPayload])
+      // Si falla por columnas inexistentes, reintentar solo con nombre
+      if (err && (err.code === 'PGRST204' || err.message?.toLowerCase().includes('column'))) {
+        const { error: err2 } = await supabase
+          .from('clientes').insert([basicPayload])
+        error = err2
+      } else {
+        error = err
+      }
     }
 
     setLoading(false)
     if (error) {
-      // Manejar error amigable si las columnas no existen en la base de datos
-      if (error.message.includes('column') || error.code === 'PGRST104') {
-        showToast('⚠️ Error: Debes ejecutar la consulta SQL para agregar las columnas "email" y "telefono" en Supabase.', 'error')
-      } else {
-        showToast(error.message, 'error')
-      }
+      showToast(error.message, 'error')
       return
     }
 
