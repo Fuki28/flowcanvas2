@@ -10,7 +10,7 @@ export function Modal({ title, onClose, children, footer }) {
 
   return (
     <div className="modal-overlay" onClick={(e) => { if (e.target === e.currentTarget) onClose() }}>
-      <div className="modal">
+      <div className="modal-box">
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
           <h2 className="modal-title" style={{ margin: 0 }}>{title}</h2>
           <button className="btn-icon" onClick={onClose}><X size={16} /></button>
